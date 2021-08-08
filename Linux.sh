@@ -40,6 +40,9 @@ fi
 for i in "${b[@]}"
 do
 case $i in
+	yum install vim
+	yum install wget
+	yum install unzip
 	1)
 	git --version > /dev/null 2>&1
         x=$(echo $?)
@@ -258,16 +261,18 @@ case $i in
         fi;;
 
 	17)
-        Golang --version > /dev/null 2>&1
+        go version > /dev/null 2>&1
         x=$(echo $?)
         if [ $x -eq 0 ]
         then
         echo "Golang is already installed";
         else
-        echo "--------------2. installing Golang"
-        curl -sfL https://get.k3s.io | sudo sh -
-
-        $o install python3 -y;
+        echo "--------------17. installing Golang"
+        wget https://dl.google.com/go/go1.13.5.linux-amd64.tar.gz
+        sudo tar -C /usr/local -xf go1.13.5.linux-amd64.tar.gz
+        export GOPATH=$HOME/golang
+        export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
+        source ~/.bash_profile
         tput setaf 4
         fi;;
 
