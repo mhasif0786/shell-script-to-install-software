@@ -4,7 +4,7 @@ echo "--------------------------Software to install-----------------------------
 echo "
       1. GIT
       2. PYTHON
-      3. PRECOMMIT
+      3. Java
       4. ANSIBLE
       5. KUBECTL
       6. KEYPASS
@@ -21,7 +21,7 @@ echo "
       17. GOLANG
       18. VSCODE
       19. PYCHARM
-      20. JAVA VERSION 8
+      20. pre-commit
       21. NODE JS"
 name=$(grep '^ID=' /etc/os-release | awk -F= {'print$2'})
 if [ '"rhel"' = "$name" ]
@@ -40,9 +40,6 @@ fi
 for i in "${b[@]}"
 do
 case $i in
-	yum install vim
-	yum install wget
-	yum install unzip
 	1)
 	git --version > /dev/null 2>&1
         x=$(echo $?)
@@ -67,16 +64,18 @@ case $i in
 	fi;;
 
 	3)
-	pre-commit --version > /dev/null 2>&1
-	x=$(echo $?)
-	if [ $x -eq 0 ]
-        then
-        echo "pre-commit is already installed";
+	java --version > /dev/null 2>&1
+        x=$(echo $?)
+        if [ $x -eq 0 ]
+	then 
+        echo "Java is already installed";
         else
-        echo "--------------3. installing pre-commit";
-	pip3 install pre-commit;
-	tput setaf 3
-	fi;;
+        echo "--------------2. installing java"
+        curl -sfL https://get.k3s.io | sudo sh - 
+        $o install python3 -y;
+        tput setaf 4
+        fi;;
+
 
 	4)
 	ansible --version > /dev/null 2>&1
@@ -261,18 +260,17 @@ case $i in
         fi;;
 
 	17)
+        export PATH=$PATH:/usr/local/go/bin
         go version > /dev/null 2>&1
         x=$(echo $?)
         if [ $x -eq 0 ]
         then
         echo "Golang is already installed";
         else
-        echo "--------------17. installing Golang"
+        echo :	"--------------17. installing Golang"
         wget https://dl.google.com/go/go1.13.5.linux-amd64.tar.gz
         sudo tar -C /usr/local -xf go1.13.5.linux-amd64.tar.gz
-        export GOPATH=$HOME/golang
-        export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
-        source ~/.bash_profile
+        echo export PATH=$PATH >> ~/.bashrc
         tput setaf 4
         fi;;
 
@@ -305,7 +303,19 @@ case $i in
         fi;;
 
 	20)
-        java --version > /dev/null 2>&1
+        pre-commit --version > /dev/null 2>&1
+        x=$(echo $?)
+        if [ $x -eq 0 ]
+        then
+        echo "pre-commit is already installed";
+        else
+        echo "--------------3. installing pre-commit";
+        pip3 install pre-commit;
+        tput setaf 3
+        fi;;
+
+        21)
+	java --version > /dev/null 2>&1
         x=$(echo $?)
         if [ $x -eq 0 ]
         then
@@ -314,7 +324,7 @@ case $i in
         echo "--------------2. installing java"
         curl -sfL https://get.k3s.io | sudo sh -
 
-        $o install python3 -y;
+        $o iinstall python3 -y;
         tput setaf 4
         fi;;
 
